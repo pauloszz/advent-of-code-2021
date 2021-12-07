@@ -2008,9 +2008,9 @@ $values = [
 ];
 
 echo count($values);
-echo "<br><br>";
-echo "Measurements larger than previous measurement:";
-echo "<br>";
+
+echo "<h3>Part 1</h3>";
+echo "Measurements larger than previous measurement:<br>";
 
 $increases = 0;
 
@@ -2025,3 +2025,23 @@ foreach ($values as $key => $value) {
 }
 
 echo $increases;
+
+echo "<h3>Part 2</h3>";
+echo "Measurement groups larger than previous measurement group:<br>";
+
+$groupIncreases = 0;
+
+foreach ($values as $key => $value) {
+	if ($key === 0 or !key_exists($key + 2, $values)) {
+		continue;
+	}
+
+	$currentGroup = $value + $values[$key + 1] + $values[$key + 2];
+	$previousGroup = $values[$key - 1] + $value + $values[$key + 1];
+
+	if ($currentGroup > $previousGroup) {
+		$groupIncreases++;
+	}
+}
+
+echo $groupIncreases;
