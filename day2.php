@@ -1017,6 +1017,7 @@ $values = [
 
 echo "Total values: ";
 echo count($values);
+echo "<h3>Part 1</h3>";
 
 $horizontal = 0;
 $depth = 0;
@@ -1038,7 +1039,6 @@ foreach ($values as $value) {
 	}
 }
 
-echo "<h3>Part 1</h3>";
 echo "Horizontal position: ";
 echo $horizontal;
 echo " and depth: ";
