@@ -2,7 +2,6 @@
 
 echo "<h1>Day 1</h1>";
 echo "<a href='index.html' target='_top'>Back</a><br><br>";
-echo "Total values: ";
 
 $values = [
 	195,
@@ -2007,6 +2006,7 @@ $values = [
 	8562,
 ];
 
+echo "Total values: ";
 echo count($values);
 
 echo "<h3>Part 1</h3>";
