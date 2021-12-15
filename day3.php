@@ -3,6 +3,21 @@
 echo "<h1>Day 2</h1>";
 echo "<a href='index.html' target='_top'>Back</a><br><br>";
 
+// $values = [
+// 	"00100",
+// 	"11110",
+// 	"10110",
+// 	"10111",
+// 	"10101",
+// 	"01111",
+// 	"00111",
+// 	"11100",
+// 	"10000",
+// 	"11001",
+// 	"00010",
+// 	"01010",
+// ];
+
 $values = [
 	"011110011110",
 	"101101001111",
@@ -1049,6 +1064,8 @@ foreach ($values as $value) {
 
 $gamma = "";
 $epsilon = "";
+$gammaRate = 0;
+$epsilonRate = 0;
 
 for ($i = 0; $i < 12; $i++) {
 	if (${"one" . $i} > ${"zero" . $i}) {
@@ -1063,8 +1080,123 @@ for ($i = 0; $i < 12; $i++) {
 $gammaRate = bindec($gamma);
 $epsilonRate = bindec($epsilon);
 
-echo "Gamma: " . $gamma . " (" . $gammaRate . ")<br>";
-echo "Epsilon: " . $epsilon . " (" . $epsilonRate . ")<br>";
-echo "Powerrate: " . $gammaRate * $epsilonRate;
+echo "Gamma rate: " . $gamma . " (" . $gammaRate . ")<br>";
+echo "Epsilon rate: " . $epsilon . " (" . $epsilonRate . ")<br>";
+echo "Power rating: " . $gammaRate * $epsilonRate;
 
 echo "<h3>Part 2</h3>";
+
+$zero0 = 0;
+$zero1 = 0;
+$zero2 = 0;
+$zero3 = 0;
+$zero4 = 0;
+$zero5 = 0;
+$zero6 = 0;
+$zero7 = 0;
+$zero8 = 0;
+$zero9 = 0;
+$zero10 = 0;
+$zero11 = 0;
+
+$one0 = 0;
+$one1 = 0;
+$one2 = 0;
+$one3 = 0;
+$one4 = 0;
+$one5 = 0;
+$one6 = 0;
+$one7 = 0;
+$one8 = 0;
+$one9 = 0;
+$one10 = 0;
+$one11 = 0;
+
+$oxygen = "";
+$co2 = "";
+
+$oxygenValues = $values;
+$co2Values = $values;
+
+for ($i = 0; $i < 12; $i++) {
+	foreach ($oxygenValues as $oxyValue) {
+		$sub = substr($oxyValue, $i, 1);
+		if ($sub == 1) {
+			${"one" . $i}++;
+		} else {
+			${"zero" . $i}++;
+		}
+	}
+
+	foreach ($oxygenValues as $oxyValue) {
+		$oxyKey = array_search($oxyValue, $oxygenValues);
+
+		if ((int)${"zero" . $i} > (int)${"one" . $i} && (int)$oxyValue[$i] === 1) {
+			array_splice($oxygenValues, $oxyKey, 1);
+		} elseif ((int)${"zero" . $i} <= (int)${"one" . $i} && (int)$oxyValue[$i] === 0) {
+			array_splice($oxygenValues, $oxyKey, 1);
+		}
+	}
+
+	if (count($oxygenValues) == 1) {
+		break;
+	}
+}
+
+$zero0 = 0;
+$zero1 = 0;
+$zero2 = 0;
+$zero3 = 0;
+$zero4 = 0;
+$zero5 = 0;
+$zero6 = 0;
+$zero7 = 0;
+$zero8 = 0;
+$zero9 = 0;
+$zero10 = 0;
+$zero11 = 0;
+
+$one0 = 0;
+$one1 = 0;
+$one2 = 0;
+$one3 = 0;
+$one4 = 0;
+$one5 = 0;
+$one6 = 0;
+$one7 = 0;
+$one8 = 0;
+$one9 = 0;
+$one10 = 0;
+$one11 = 0;
+
+for ($i = 0; $i < 12; $i++) {
+	foreach ($co2Values as $co2Value) {
+		$sub = substr($co2Value, $i, 1);
+		if ($sub == 1) {
+			${"one" . $i}++;
+		} else {
+			${"zero" . $i}++;
+		}
+	}
+
+	foreach ($co2Values as $co2Value) {
+		$co2Key = array_search($co2Value, $co2Values);
+
+		if ((int)${"zero" . $i} > (int)${"one" . $i} && (int)$co2Value[$i] === 0) {
+			array_splice($co2Values, $co2Key, 1);
+		} elseif ((int)${"zero" . $i} <= (int)${"one" . $i} && (int)$co2Value[$i] === 1) {
+			array_splice($co2Values, $co2Key, 1);
+		}
+	}
+
+	if (count($co2Values) == 1) {
+		break;
+	}
+}
+
+$oxygenRate = bindec($oxygenValues[0]);
+$co2Rate = bindec($co2Values[0]);
+
+echo "Oxygen rating: " . $oxygenValues[0] . " (" . $oxygenRate . ")<br>";
+echo "CO2 rating: " . $co2Values[0] . " (" . $co2Rate . ")<br>";
+echo "Life support rating: " . ($oxygenRate * $co2Rate);
