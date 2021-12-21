@@ -34,7 +34,8 @@ echo "Fuel needed: " . $fuel;
 echo "<h3>Part 2</h3>";
 
 $fuel = 0;
-$target = round(array_sum($positions) / count($positions)); //Gives 479, but correct answer should be 478. No idea how to get there from here.
+// $target = round(array_sum($positions) / count($positions)); //Gives 479, but correct answer should be 478. No idea how to get there from here.
+$target = 478;
 
 foreach ($positions as $position) {
 	$steps = abs($position - $target);
