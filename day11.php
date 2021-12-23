@@ -1,7 +1,7 @@
 <?php
 
 echo "<h1>Day 11</h1>";
-echo "<a href='k.html' target='_top'>Back</a>";
+echo "<a href='index.html' target='_top'>Back</a>";
 
 global $lines;
 
