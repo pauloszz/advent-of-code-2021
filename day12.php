@@ -2,7 +2,7 @@
 
 echo "<h1>Day 12</h1>";
 echo "<a href='k.html' target='_top'>Back</a>";
-echo "<br>Most code for this day found on: <a href='https://github.com/duemti/adventofcode/tree/master/2021/day_11_Dumbo_Octopus' target='_top'>duemti's GitHub</a>";
+echo "<br>Most code for this day found on: <a href='https://github.com/duemti/adventofcode/tree/master/2021/day_11_Dumbo_Octopus' target='_blank'>duemti's GitHub</a>";
 
 $input =
 	"LA-sn
