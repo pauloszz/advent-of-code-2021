@@ -2,7 +2,7 @@
 
 echo "<h1>Day 10</h1>";
 echo "<a href='index.html' target='_top'>Back</a>";
-echo "<br>Most code for this day found on: <a href='https://github.com/soodssr/aoc-2021/tree/main/day_10' target='_top'>soodssr's GitHub</a>";
+echo "<br>Most code for this day found on: <a href='https://github.com/soodssr/aoc-2021/tree/main/day_10' target='_blank'>soodssr's GitHub</a>";
 
 $lines =
 	"<([<({{[<{{((<()>({}{})}<({}<>)>)}}>[<{(([()<>]<<>{}>))}<{({<>[]}<<>>)[([]<>)<{}{}>]}>>]]}}[<[{{[{{[<><>]
