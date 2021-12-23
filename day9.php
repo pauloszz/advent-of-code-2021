@@ -3,13 +3,6 @@
 echo "<h1>Day 9</h1>";
 echo "<a href='index.html' target='_top'>Back</a>";
 
-// $input =
-// 	"2199943210
-// 3987894921
-// 9856789892
-// 8767896789
-// 9899965678";
-
 $input =
 	"9987653234589654549865432101235789979765459832101234567943986543101239874321012932397319985214896543
 9898541015678943239876973876545699868954398765212345678932399654592345965432129891985498764323789432
@@ -120,6 +113,7 @@ echo "<h3>Part 1</h3>";
 
 $count = 0;
 $sum = 0;
+$lowPoints = [];
 
 foreach ($input as $key => $line) {
 	$line = str_split($line);
@@ -185,9 +179,143 @@ foreach ($input as $key => $line) {
 		if ($lowerBefore && $lowerAfter && $lowerAbove && $lowerBelow) {
 			$count++;
 			$sum = $sum + ($number + 1);
+			array_push($lowPoints, [$key => $numberKey]);
 		}
 	}
 }
 
 echo "Amount of lowest numbers: " . $count . "<br>";
 echo "Sum of lowest numbers: " . $sum;
+
+echo "<h3>Part 2</h3>";
+
+global $basinPoints;
+$basinPoints = [];
+
+foreach ($lowPoints as $lowPoint) {
+	foreach ($lowPoint as $line => $lowPointKey) {
+		if ($lowPointKey != 2) {
+			// continue;
+		}
+		$basinPoints[($line . "," . $lowPointKey)] = [];
+		array_push($basinPoints[($line . "," . $lowPointKey)], ($line . "," . $lowPointKey));
+		$currentNumber = $input[$line][$lowPointKey];
+
+		//Check after
+		$numbersAfter = countNumbersAfter($input, $line, $lowPointKey, $basinPoints, $currentNumber, $line, $lowPointKey);
+
+		//Check before
+		$numbersBefore = countNumbersBefore($input, $line, $lowPointKey, $basinPoints, $currentNumber, $line, $lowPointKey);
+
+		//Check above
+		$numbersAbove = countNumbersAbove($input, $line, $lowPointKey, $basinPoints, $currentNumber, $line, $lowPointKey);
+
+		//Check below
+		$numbersBelow = countNumbersBelow($input, $line, $lowPointKey, $basinPoints, $currentNumber, $line, $lowPointKey);
+	}
+}
+
+array_multisort(array_map('count', $basinPoints), SORT_DESC, $basinPoints);
+$basinPoints = array_slice($basinPoints, 0, 3);
+
+$result = [];
+
+foreach ($basinPoints as $points) {
+	array_push($result, count($points));
+}
+
+echo "Three largest basin sizes multiplied: " . array_product($result);
+
+function checkIfAlreadyAdded(&$basinPoints, $checkInKey, $checkValue): bool
+{
+	foreach ($basinPoints as $key => $points) {
+		if ($key != $checkInKey) {
+			continue;
+		}
+
+		foreach ($points as $point) {
+			if ($point == $checkValue) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+function countNumbersAfter($input, $checkLine, $checkKey, &$basinPoints, $currentNumber, $basinLine, $basinKey): bool
+{
+	$countNumbersAfter = 0;
+
+	for ($i = ($checkKey + 1); $i < strlen($input[$checkLine]); $i++) {
+		if ($currentNumber < (int)$input[$checkLine][$i] && (int)$input[$checkLine][$i] < 9 && !checkIfAlreadyAdded($basinPoints, ($basinLine . "," . $basinKey), ($checkLine . "," . $i))) {
+			array_push($basinPoints[($basinLine . "," . $basinKey)], ($checkLine . "," . $i));
+			$countNumbersAfter++;
+			$currentNumber = (int)$input[$checkLine][$i];
+			countNumbersAbove($input, $checkLine, $i, $basinPoints, $currentNumber, $basinLine, $basinKey);
+			countNumbersBelow($input, $checkLine, $i, $basinPoints, $currentNumber, $basinLine, $basinKey);
+		} else {
+			break;
+		}
+	}
+
+	return $countNumbersAfter == 0 ? false : true;
+}
+
+function countNumbersBefore($input, $checkLine, $checkKey, &$basinPoints, $currentNumber, $basinLine, $basinKey): int
+{
+	$CountNumbersBefore = 0;
+
+	for ($i = 0; $i < $checkKey; $i++) {
+		$checkNumber = (int)$input[$checkLine][$checkKey - $i - 1];
+		if ($currentNumber < $checkNumber && $checkNumber < 9 && !checkIfAlreadyAdded($basinPoints, ($basinLine . "," . $basinKey), ($checkLine . "," . ($checkKey - $i - 1)))) {
+			array_push($basinPoints[($basinLine . "," . $basinKey)], ($checkLine . "," . ($checkKey - $i - 1)));
+			$CountNumbersBefore++;
+			$currentNumber = $checkNumber;
+			countNumbersAbove($input, $checkLine, ($checkKey - $i - 1), $basinPoints, $currentNumber, $basinLine, $basinKey);
+			countNumbersBelow($input, $checkLine, ($checkKey - $i - 1), $basinPoints, $currentNumber, $basinLine, $basinKey);
+		} else {
+			break;
+		}
+	}
+	return $CountNumbersBefore;
+}
+
+function countNumbersAbove($input, $checkLine, $checkKey, &$basinPoints, $currentNumber, $basinLine, $basinKey): int
+{
+	$countNumbersAbove = 0;
+
+	for ($i = 0; $i < $checkLine; $i++) {
+		$checkNumber = (int)$input[$checkLine - $i - 1][$checkKey];
+		if ($currentNumber < $checkNumber && $checkNumber < 9 && !checkIfAlreadyAdded($basinPoints, ($basinLine . "," . $basinKey), (($checkLine - $i - 1) . "," . $checkKey))) {
+			array_push($basinPoints[($basinLine . "," . $basinKey)], (($checkLine - $i - 1) . "," . $checkKey));
+			$countNumbersAbove++;
+			$currentNumber = $checkNumber;
+			countNumbersAfter($input, ($checkLine - $i - 1), $checkKey, $basinPoints, $currentNumber, $basinLine, $basinKey);
+			countNumbersBefore($input, ($checkLine - $i - 1), $checkKey, $basinPoints, $currentNumber, $basinLine, $basinKey);
+		} else {
+			break;
+		}
+	}
+
+	return $countNumbersAbove;
+}
+
+function countNumbersBelow($input, $checkLine, $checkKey, &$basinPoints, $currentNumber, $basinLine, $basinKey): int
+{
+	$countNumbersBelow = 0;
+
+	for ($i = ($checkLine + 1); $i < count($input); $i++) {
+		if ($currentNumber < (int)$input[$i][$checkKey] && (int)$input[$i][$checkKey] < 9 && !checkIfAlreadyAdded($basinPoints, ($basinLine . "," . $basinKey), ($i . "," . $checkKey))) {
+			array_push($basinPoints[($basinLine . "," . $basinKey)], ($i . "," . $checkKey));
+			$countNumbersBelow++;
+			$currentNumber = (int)$input[$i][$checkKey];
+			countNumbersAfter($input, $i, $checkKey, $basinPoints, $currentNumber, $basinLine, $basinKey);
+			countNumbersBefore($input, $i, $checkKey, $basinPoints, $currentNumber, $basinLine, $basinKey);
+		} else {
+			break;
+		}
+	}
+
+	return $countNumbersBelow;
+}
